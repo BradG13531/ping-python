@@ -133,6 +133,7 @@ else:
             myOmniscan450.control_os_ping_params(
                 start_mm=0,
                 length_mm=int(parts[0]),
+                gain_index=4,
                 enable=1
             )
         else:
@@ -141,7 +142,6 @@ else:
     else: 
         # For default settings, just set enable pinging
         myOmniscan450.control_os_ping_params(
-        myOmniscan450.control_os_ping_params(enable=1)
             enable=1
         )
 
