@@ -98,14 +98,23 @@ if args.log is not None and not new_log:
         data = PingMessage(msg_data=raw_bytes)
 
     if data:
-        print(data)
-
         # Printing the same results as if directly connected to the Omniscan
         scaled_result = Omniscan450.scale_power(data)
-        for i in range(len(scaled_result)):
-            print(f"{i+1}: Raw: {data.pwr_results[i]}\tScaled: {scaled_result[i]}dB")
-        print(f"Min power: {data.min_pwr_db} dB")
-        print(f"Max power: {data.max_pwr_db} dB")
+        # for i in range(len(scaled_result)):
+        #     print(f"{i+1}: Raw: {data.pwr_results[i]}\tScaled: {scaled_result[i]}dB")
+        # print(f"Min power: {data.min_pwr_db} dB")
+        # print(f"Max power: {data.max_pwr_db} dB")
+        print(data)
+        average = sum(scaled_result) / len(scaled_result)
+        print(f"Average Power: {average} dB")
+
+        early_bins = data.pwr_results[:50]
+        early_max_dB = max([
+            data.min_pwr_db + (val / 65535.0) * (data.max_pwr_db - data.min_pwr_db)
+            for val in early_bins
+        ])
+
+        print(f"Early max dB: {early_max_dB} dB")
     else:
         print("Failed to get report")
 
@@ -131,7 +140,10 @@ else:
             myOmniscan450.control_os_ping_params(enable=1)
     else: 
         # For default settings, just set enable pinging
+        myOmniscan450.control_os_ping_params(
         myOmniscan450.control_os_ping_params(enable=1)
+            enable=1
+        )
 
     # For a custom ping rate
     custom_msec_per_ping = Omniscan450.calc_msec_per_ping(1000)    # 1000 Hz
@@ -155,6 +167,16 @@ else:
             print(f"{i+1}: Raw: {data.pwr_results[i]}\tScaled: {scaled_result[i]}dB")
         print(f"Min power: {data.min_pwr_db} dB")
         print(f"Max power: {data.max_pwr_db} dB")
+        average = sum(scaled_result) / len(scaled_result)
+        print(f"Average Power: {average} dB")
+
+        early_bins = data.pwr_results[:50]
+        early_max_dB = max([
+            data.min_pwr_db + (val / 65535.0) * (data.max_pwr_db - data.min_pwr_db)
+            for val in early_bins
+        ])
+
+        print(f"Early max dB: {early_max_dB} dB")
     else:
         print("Failed to get report")
 
